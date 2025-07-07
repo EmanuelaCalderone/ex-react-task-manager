@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
+import TaskRow from "./TaskRow";
 
 const TaskList = () => {
 
@@ -19,11 +20,7 @@ const TaskList = () => {
                     </thead>
                     <tbody>
                         {tasks.map((task) => (
-                            <tr key={task.id}>
-                                <td>{task.title}</td>
-                                <td>{task.status}</td>
-                                <td>{task.createdAt}</td>
-                            </tr>
+                            <TaskRow key={task.id} task={task} />
                         ))}
                     </tbody>
                 </table>
