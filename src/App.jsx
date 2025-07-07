@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from 'react'
 import './App.css'
 import { GlobalContext } from "./context/GlobalContext";
+import GlobalProvider from "./context/GlobalContext";
+
 
 function App() {
 

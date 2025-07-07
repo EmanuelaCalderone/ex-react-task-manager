@@ -9,6 +9,8 @@ const GlobalProvider = ({ children }) => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
+                console.log("Fetch URL:", `${import.meta.env.VITE_API_URL}/tasks`);
+
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`)
                 if (!response.ok) throw new Error("Errore nel fetch");
                 const data = await response.json();
