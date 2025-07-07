@@ -20,9 +20,29 @@ function useTasks() {
         fetchTasks();
     }, []);
 
-    const addTask = (newTask) => {
-        setTasks(prevTasks => [...prevTasks, newTask]);
-    }
+    const addTask = async (newTask) => {
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newTask),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setTasks(prevTasks => [...prevTasks, data.task]);
+            } else {
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            throw error;
+        }
+    };
+
     const removeTask = (idToBeRemoved) => {
         const updatedTasks = tasks.filter(task => task.id !== idToBeRemoved);
         setTasks(updatedTasks);
