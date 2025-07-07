@@ -4,7 +4,7 @@ const Navbar = () => {
 
     return (
         <nav>
-            <NavLink to="/" end>Lista Task</NavLink>
+            <NavLink to="/" end style={{ marginRight: "2rem" }}>Lista Task</NavLink>
             <NavLink to="/addtask">Aggiungi Task</NavLink>
         </nav>
     )
