@@ -4,6 +4,7 @@ const AddTask = () => {
 
     return (
         <>
+            <h2>Aggiungi un nuovo task</h2>
         </>
     );
 };

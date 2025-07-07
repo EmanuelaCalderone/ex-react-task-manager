@@ -5,11 +5,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { useState } from 'react'
 import './App.css'
+import { GlobalContext } from "./context/GlobalContext";
 
 function App() {
 
   return (
-    <>
+    <GlobalProvider>
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -17,7 +18,7 @@ function App() {
           <Route path="/addtask" element={<AddTask />} />
         </Routes>
       </BrowserRouter >
-    </>
+    </GlobalProvider>
   )
 }
 
