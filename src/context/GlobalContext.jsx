@@ -1,10 +1,14 @@
 import React, { createContext, useState, useEffect } from "react";
 
+import useTasks from "../hooks/useTasks";
+
 export const GlobalContext = createContext();
 
 const GlobalProvider = ({ children }) => {
 
-    const [tasks, setTasks] = useState([]);
+    const { tasks, addTask, removeTask, updateTask } = useTasks();
+
+    /* const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -22,10 +26,10 @@ const GlobalProvider = ({ children }) => {
         };
 
         fetchTasks();
-    }, []);
+    }, []); */
 
     return (
-        <GlobalContext.Provider value={{ tasks, setTasks }}>
+        <GlobalContext.Provider value={{ tasks, addTask, removeTask, updateTask }}>
             {children}
         </GlobalContext.Provider>
     );
