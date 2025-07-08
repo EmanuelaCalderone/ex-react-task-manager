@@ -59,7 +59,7 @@ function useTasks() {
             //altrimenti
             setTasks((prevTasks) => prevTasks.filter(task => task.id !== taskId))
         } catch (error) {
-            throw Error;
+            throw error;
         }
     };
 
