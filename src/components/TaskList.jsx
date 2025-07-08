@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState, useMemo, useCallback, useRef } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import TaskRow from "./TaskRow";
 import { Link } from "react-router-dom";
@@ -13,6 +13,31 @@ const TaskList = () => {
     const [sortBy, setSortBy] = useState("createdAt"); //default
     const [sortOrder, setSortOrder] = useState(1); //crescente
 
+    //stato per debounce
+    const [searchQuery, setSearchQuery] = useState("");
+
+    //ref per il timer debouce
+    const debounceTimeout = useRef(null);
+
+    //funzione debounce, aggiorno searchQuery dopo delay
+    const debouncedSearch = useCallback((value) => {
+        //cancello prev timer
+        if (debounceTimeout.current) {
+            clearTimeout(debounceTimeout.current);
+        }
+        //imposto nuovo timer
+        debounceTimeout.current = setTimeout(() => {
+            setSearchQuery(value);
+        }, 300); //aggiorno stato solo se non vine digitato altro dall'utente per 300ms
+    }, []);
+
+    //funzione onChange input ricerca (non controllato, senza value)
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        debouncedSearch(value);
+    };
+
+
     //funzione per ordinare
     const handleSort = (column) => {
         if (sortBy === column) {
@@ -25,13 +50,27 @@ const TaskList = () => {
         }
     };
 
-    //logica di ordinamento con useMemo per evitae calcoli inutili: dort solo quando cambiano tasks
-    const sortedTasks = useMemo(() => {
-        const tasksCopy = [...tasks]; //copia dell'array originale(immutabilità)
+    //filtro case-insensitive e ordino con useMemo(tasks, sortBy, sortOrder, searchQuery)
+    const filteredSortedTasks = useMemo(() => {
+        const filtered = tasks.filter((task) =>
+            task.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        //copio per ordinare
+        const tasksCopy = [...filtered];
 
-        return tasksCopy.sort((a, b) => {
-            //variabile che contiene il risultato del confronto tra i due task
+        //ordino
+        tasksCopy.sort((a, b) => {
             let compareValue = 0;
+
+
+            /*   //logica di ordinamento con useMemo per evitae calcoli inutili: sort solo quando cambiano tasks
+              const sortedTasks = useMemo(() => {
+                  const tasksCopy = [...tasks]; //copia dell'array originale(immutabilità)
+  
+                  return tasksCopy.sort((a, b) => {
+                      //variabile che contiene il risultato del confronto tra i due task
+                      let compareValue = 0; */
+
             if (sortBy === "title") {
                 //ordine alfabetico per nome task
                 compareValue = a.title.localeCompare(b.title);
@@ -47,11 +86,21 @@ const TaskList = () => {
             //applico ordine (crescente o decr) - moltiplico il risultato del confronto per sortOrder per invertire l'ordine se necessario
             return compareValue * sortOrder;
         });
-    }, [tasks, sortBy, sortOrder]); //array di dipendenze (ricalcola sortedTasks solo se cambia uno di quesit valori)
+        return tasksCopy;
+
+    }, [tasks, sortBy, sortOrder, searchQuery]); //array di dipendenze (ricalcola sortedTasks solo se cambia uno di quesit valori - aggiunto searchQuery)
 
     return (
         <>
             <h2>Lista dei task</h2>
+
+            <input
+                type="text"
+                placeholder="Cerca task"
+                onChange={handleSearchChange}
+                style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%" }}
+            />
+
             <div>
                 <table>
                     <thead>
@@ -68,17 +117,36 @@ const TaskList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedTasks.map((task) => (
+                        {filteredSortedTasks.map((task) => (
                             <tr key={task.id}>
-                                <td>{task.title}</td>
-                                <td>{task.status}</td>
-                                <td>{task.createdAt}</td>
                                 <td>
-                                    <Link to={`/task/${task.id}`}>Dettagli</Link>
+                                    <Link to={`/task/${task.id}`} className="task-title-link">
+                                        {task.title}
+                                    </Link>
                                 </td>
+                                <td
+                                    style={{
+                                        backgroundColor:
+                                            task.status === "To do" ? "yellow" :
+                                                task.status === "Doing" ? "red" :
+                                                    task.status === "Done" ? "green" :
+                                                        "black",
+                                        color: task.status === "To do" ? "black" : "white",
+                                        padding: "8px",
+                                        fontWeight: "bold",
+                                        textAlign: "center",
+                                        borderRadius: "4px",
+                                    }}
+                                >
+                                    {task.status}
+                                </td>
+                                <td>{task.createdAt}</td>
                             </tr>
                         ))}
                     </tbody>
+
+
+
                 </table>
             </div>
         </>
