@@ -1,9 +1,14 @@
 import React from "react";
 
+import { Link } from "react-router-dom";
+
+
 const TaskRow = React.memo(({ task }) => {
     return (
         <tr>
-            <td>{task.title}</td>
+            <td>
+                <Link to={`/task/${task.id}`}>{task.title}</Link>
+            </td>
             <td style={
                 task.status === "To do" ? { backgroundColor: "red" }
                     : task.status === "Doing" ? { backgroundColor: "yellow", color: "black" }

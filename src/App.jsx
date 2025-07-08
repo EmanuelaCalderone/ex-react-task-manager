@@ -8,6 +8,8 @@ import './App.css'
 import { GlobalContext } from "./context/GlobalContext";
 import GlobalProvider from "./context/GlobalContext";
 
+import TaskDetail from "./pages/TaskDetail";
+
 
 function App() {
 
@@ -18,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<TaskList />} />
           <Route path="/addtask" element={<AddTask />} />
+          <Route path="/task/:id" element={<TaskDetail />} /> {/* :id = parametro dinamico */}
         </Routes>
       </BrowserRouter >
     </GlobalProvider>
