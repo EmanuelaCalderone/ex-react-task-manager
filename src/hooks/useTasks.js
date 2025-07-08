@@ -43,10 +43,24 @@ function useTasks() {
         }
     };
 
-    const removeTask = (idToBeRemoved) => {
-        const updatedTasks = tasks.filter(task => task.id !== idToBeRemoved);
-        setTasks(updatedTasks);
-    }
+    const removeTask = async (taskId) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/${taskId}`, {
+                method: "DELETE",
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.message || "Errore durante la rimozione del task")
+            }
+            //altrimenti
+            setTasks((prevTasks) => prevTasks.filter(task => task.id !== taskId))
+        } catch (error) {
+            throw Error;
+        }
+    };
+
     const updateTask = (updatedTask) => {
         setTasks(tasks => tasks.map(task => {
             if (task.id === updatedTask.id) {
