@@ -71,31 +71,42 @@ const TaskDetail = () => {
     return (
         <>
             <h2>Dettagli Task</h2>
-            <span><strong>Nome:</strong>{task.title}</span>
-            <span><strong>Description:</strong>{task.description}</span>
-            <span><strong>Stato:</strong>{task.status}</span>
-            <span><strong>Creato il:</strong>{task.createdAt}</span>
+            <div class="single-task">
 
-            <button onClick={openDeleteModal}> Elimina task</button >
 
-            <button onClick={openEditModal}>Modifica Task</button>
+                <p><strong>Nome:</strong>{task.title}</p>
+                <p><strong>Description:</strong>{task.description}</p>
+                <p><strong>Stato:</strong>{task.status}</p>
+                <p>
+                    <strong>Creato il:</strong>{" "}
+                    {new Date(task.createdAt).toLocaleDateString("it-IT", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                    })}
+                </p>
 
-            {/*modale per eliminare*/}
-            <Modal
-                title="Conferma eliminazione"
-                content="Confermi di voler eliminare il task?"
-                show={showDeleteModal}
-                onClose={closeDeleteModal}
-                onConfirm={handleConfirmDelete}
-                confirmText="Elimina"
-            />
-            {/*modale per aggiornare*/}
-            <EditTaskModal
-                show={showEditModal}
-                onClose={closeEditModal}
-                task={task}
-                onSave={handleSaveEdit}
-            />
+                <button onClick={openDeleteModal}> Elimina task</button >
+
+                <button onClick={openEditModal}>Modifica Task</button>
+
+                {/*modale per eliminare*/}
+                <Modal
+                    title="Conferma eliminazione"
+                    content="Confermi di voler eliminare il task?"
+                    show={showDeleteModal}
+                    onClose={closeDeleteModal}
+                    onConfirm={handleConfirmDelete}
+                    confirmText="Elimina"
+                />
+                {/*modale per aggiornare*/}
+                <EditTaskModal
+                    show={showEditModal}
+                    onClose={closeEditModal}
+                    task={task}
+                    onSave={handleSaveEdit}
+                />
+            </div>
         </>
     )
 }

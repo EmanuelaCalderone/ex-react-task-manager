@@ -3,6 +3,8 @@ import { GlobalContext } from "../context/GlobalContext";
 import TaskRow from "./TaskRow";
 import { Link } from "react-router-dom";
 
+import '../App.css'
+
 
 const TaskList = () => {
 
@@ -140,7 +142,7 @@ const TaskList = () => {
                                 >
                                     {task.status}
                                 </td>
-                                <td>{task.createdAt}</td>
+                                <td>{new Date(task.createdAt).toLocaleDateString("it-IT", { day: '2-digit', month: '2-digit', year: '2-digit' })}</td>
                             </tr>
                         ))}
                     </tbody>

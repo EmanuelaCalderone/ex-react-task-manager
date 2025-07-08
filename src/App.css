@@ -11,6 +11,15 @@
   color: inherit;
 }
 
+table tr td {
+  border: 1px solid white;
+}
+
+.single-task {
+  border: 1px solid white;
+
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
