@@ -20,6 +20,7 @@ function useTasks() {
         fetchTasks();
     }, []);
 
+    //funzione per aggiungere task
     const addTask = async (newTask) => {
 
         try {
@@ -43,6 +44,7 @@ function useTasks() {
         }
     };
 
+    //funzione per rimuovere task
     const removeTask = async (taskId) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/${taskId}`, {
@@ -61,15 +63,37 @@ function useTasks() {
         }
     };
 
-    const updateTask = (updatedTask) => {
-        setTasks(tasks => tasks.map(task => {
-            if (task.id === updatedTask.id) {
-                return updatedTask;
-            }
-            return task;
-        }));
-    }
+    //funzione per aggiornare task
+    const updateTask = async (updatedTask) => {
+        try {
+            //chiamata all'API per aggiornare il task specifico
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/${updatedTask.id}`, {
+                method: "PUT", //metodo HTTP per aggiornare la risorsa
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedTask) //conversione oggetto js > stringa JSON
+            });
 
+            //coverto la risposta dell'API in oggetto js
+            const data = await response.json();
+
+            //se la risposta non ha avuto successo
+            if (!data.success) {
+                throw new Error(data.message || "Errore durante l'aggiornamento del task");
+            }
+
+            //altrimenti
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    //se l'id del task corrente è uguael a quello del task aggiornato, prendo quello aggiornato, altrimenti resta invariato
+                    task.id === updatedTask.id ? data.task : task
+                )
+            );
+        } catch (error) { //gestione errore ad es. nel fetch
+            throw error;
+        }
+    };
     return {
         tasks,
         addTask,
