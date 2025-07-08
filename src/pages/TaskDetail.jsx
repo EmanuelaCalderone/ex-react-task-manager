@@ -6,18 +6,24 @@ import { useNavigate } from "react-router-dom" //hook per spostarsi da una pag a
 
 import Modal from "../components/Modal";
 
+import EditTaskModal from "../components/EditTaskModal";
+
+
 const TaskDetail = () => {
     //prendo id dall'URL
     const { id } = useParams();
     //prendo l'elenco dei task
-    const { tasks, removeTask } = useContext(GlobalContext);
+    const { tasks, removeTask, updateTask } = useContext(GlobalContext);
     //creo stato locale per il task specifico
     const [task, setTask] = useState(null);
 
     const navigate = useNavigate();
 
     //stato per la modale
-    const [showModal, setShowModal] = useState(false);
+    //const [showModal, setShowModal] = useState(false);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     useEffect(() => {
         const foundTask = tasks.find((task) => task.id.toString() === id);
@@ -29,9 +35,14 @@ const TaskDetail = () => {
     };
 
     //funzione per aprire la modale
-    const openModal = () => setShowModal(true);
+    const openDeleteModal = () => setShowDeleteModal(true);
     //funzione per chiudere la modale
-    const closeModal = () => setShowModal(false);
+    const closeDeleteModal = () => setShowDeleteModal(false);
+    //funzione per modificare la modale
+    const openEditModal = () => setShowEditModal(true);
+    //funzione per chiudere la modale per la modifica
+    const closeEditModal = () => setShowEditModal(false);
+
 
 
     //funzione per elimianare task
@@ -45,6 +56,18 @@ const TaskDetail = () => {
         }
     };
 
+    //funzione per salvare modifica
+    const handleSaveEdit = async (updatedTask) => {
+        try {
+            await updateTask(updatedTask);
+            alert("Task modificato con successo");
+            closeEditModal();
+        } catch (error) {
+            alert(`Errore: ${error.message}`);
+        }
+    };
+
+
     return (
         <>
             <h2>Dettagli Task</h2>
@@ -52,15 +75,26 @@ const TaskDetail = () => {
             <span><strong>Description:</strong>{task.description}</span>
             <span><strong>Stato:</strong>{task.status}</span>
             <span><strong>Creato il:</strong>{task.createdAt}</span>
-            <button onClick={openModal}> Elimina task</button >
 
+            <button onClick={openDeleteModal}> Elimina task</button >
+
+            <button onClick={openEditModal}>Modifica Task</button>
+
+            {/*modale per eliminare*/}
             <Modal
                 title="Conferma eliminazione"
                 content="Confermi di voler eliminare il task?"
-                show={showModal}
-                onClose={closeModal}
+                show={showDeleteModal}
+                onClose={closeDeleteModal}
                 onConfirm={handleConfirmDelete}
                 confirmText="Elimina"
+            />
+            {/*modale per aggiornare*/}
+            <EditTaskModal
+                show={showEditModal}
+                onClose={closeEditModal}
+                task={task}
+                onSave={handleSaveEdit}
             />
         </>
     )
