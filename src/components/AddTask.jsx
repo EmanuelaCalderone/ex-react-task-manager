@@ -17,27 +17,33 @@ const AddTask = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        //creazione nuovo oggetto con i campi che vengono scritti
+        //creazione nuovo oggetto con i campi che vengono
+        /*      const newTask = {
+                 title,
+                 description: descriptionRef.current.value,
+                 status: statusRef.current.value
+             };
+             console.log("Nuovo task aggiunto: ", newTask); */
+
+        //primo controllo per campo vuoto
+        if (title.trim() === "") {
+            setError("Il campo non può essere vuoto");
+            return
+        }
+        //secondo controllo per caratteri speciali - verifico se almeno un carattere della lista è contenuto nella stringa symbols
+        const includesInvalidSymbol = [...title].some(char => symbols.includes(char));
+        if (includesInvalidSymbol) {
+            setError("Il campo non può contenere caratteri speciali");
+            return
+        }
+        //no errori
+        setError("");
+
         const newTask = {
             title,
             description: descriptionRef.current.value,
             status: statusRef.current.value
-        };
-        console.log("Nuovo task aggiunto: ", newTask);
-
-        /*  //primo controllo per campo vuoto
-         if (title.trim() === "") {
-             setError("Il campo non può essere vuoto");
-             return
-         }
-         //secondo controllo per caratteri speciali - verifico se almeno un carattere della lista è contenuto nella stringa symbols
-         const includesInvalidSymbol = [...title].some(char => symbols.includes(char));
-         if (includesInvalidSymbol) {
-             setError("Il campo non può contenere caratteri speciali");
-             return
-         }
-         //no errori
-         setError(""); */
+        }
 
         try {
             await addTask(newTask);
@@ -45,8 +51,8 @@ const AddTask = () => {
 
             //reset dei campi
             setTitle("");
-            descriptionRef.current.value = "";
-            statusRef.current.value = "To do";
+            if (descriptionRef.current) descriptionRef.current.value = "";
+            if (statusRef.current) statusRef.current.value = "To do";
         } catch (error) {
             alert(`Si è verificato un errore: ${error.message}`)
         }
