@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 
+import "./AddTask.css";
+
 const AddTask = () => {
 
     const { addTask } = useContext(GlobalContext);
@@ -62,29 +64,49 @@ const AddTask = () => {
 
     return (
         <>
-            <h2>Aggiungi un nuovo task</h2>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="title">Task</label>
-                <input type="text" id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <h2 className="add-task-title">Aggiungi un nuovo task</h2>
+            <form onSubmit={handleSubmit} className="add-task-form">
+                <label htmlFor="title" className="add-task-label">Task</label>
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    className="add-task-input"
+                />
 
-                {error && <p>{error}</p>}
+                {error && <p className="add-task-error">{error}</p>}
 
-                <label htmlFor="description" style={{ marginLeft: "2rem" }}>Descrizione</label>
-                <textarea id="description" name="description" ref={descriptionRef} required />
+                <label htmlFor="description" className="add-task-label" style={{ marginLeft: "2rem" }}>Descrizione</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    ref={descriptionRef}
+                    required
+                    className="add-task-textarea"
+                />
 
-                <label htmlFor="status" style={{ marginLeft: "2rem" }}>Status</label>
-                <select id="status" name="status" ref={statusRef} defaultValue="To do" required style={{ padding: "0.5rem" }}>
+                <label htmlFor="status" className="add-task-label" style={{ marginLeft: "2rem" }}>Status</label>
+                <select
+                    id="status"
+                    name="status"
+                    ref={statusRef}
+                    defaultValue="To do"
+                    required
+                    className="add-task-select"
+                >
                     <option>To do</option>
                     <option>Doing</option>
                     <option>Done</option>
                 </select>
 
                 <br />
-                <button type="submit">Aggiungi Task</button >
+                <button type="submit" className="add-task-button">Aggiungi Task</button >
             </form >
         </>
     );
 };
-
 
 export default AddTask;
