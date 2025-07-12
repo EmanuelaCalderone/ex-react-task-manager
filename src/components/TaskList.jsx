@@ -15,10 +15,10 @@ const TaskList = () => {
     const [sortBy, setSortBy] = useState("createdAt"); //default
     const [sortOrder, setSortOrder] = useState(1); //crescente
 
-    //stato per debounce
+    //stato che contiene il testo della ricerca, aggiornato con debounce
     const [searchQuery, setSearchQuery] = useState("");
 
-    //ref per il timer debouce
+    //ref per salvare il timer del debouce, per annullarlo se l utente continua a scrivere
     const debounceTimeout = useRef(null);
 
     //funzione debounce, aggiorno searchQuery dopo delay
@@ -120,30 +120,7 @@ const TaskList = () => {
                     </thead>
                     <tbody>
                         {filteredSortedTasks.map((task) => (
-                            <tr key={task.id}>
-                                <td>
-                                    <Link to={`/task/${task.id}`} className="task-title-link">
-                                        {task.title}
-                                    </Link>
-                                </td>
-                                <td
-                                    style={{
-                                        backgroundColor:
-                                            task.status === "To do" ? "yellow" :
-                                                task.status === "Doing" ? "red" :
-                                                    task.status === "Done" ? "green" :
-                                                        "black",
-                                        color: task.status === "To do" ? "black" : "white",
-                                        padding: "8px",
-                                        fontWeight: "bold",
-                                        textAlign: "center",
-                                        borderRadius: "4px",
-                                    }}
-                                >
-                                    {task.status}
-                                </td>
-                                <td>{new Date(task.createdAt).toLocaleDateString("it-IT", { day: '2-digit', month: '2-digit', year: '2-digit' })}</td>
-                            </tr>
+                            <TaskRow key={task.id} task={task} />
                         ))}
                     </tbody>
 
